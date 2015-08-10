@@ -1,8 +1,8 @@
 # TableFixHeaders
 ## What is it?
-TableFixHeaders is an Android widget to display tables with headers.
-The author seems do not update this library any more, so I try to fix some bug for it.
-U can follow the repository here: **https://github.com/InQBarna/TableFixHeaders**
+TableFixHeaders is an Android widget to display tables with headers.  
+The author seems do not update this library any more, so I try to fix some bug for it.  
+U can follow the repository here: **https://github.com/InQBarna/TableFixHeaders**  
 
 ## Features
 
