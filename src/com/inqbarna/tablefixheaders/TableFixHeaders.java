@@ -13,6 +13,7 @@ import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -30,6 +31,9 @@ import android.widget.Scroller;
 public class TableFixHeaders extends ViewGroup {
 	private int currentX;
 	private int currentY;
+	
+	private int velocityX;
+	private int velocityY;
 
 	private TableAdapter adapter;
 	private int scrollX;
@@ -205,16 +209,16 @@ public class TableFixHeaders extends ViewGroup {
 				final int diffY = currentY - y2;
 				currentX = x2;
 				currentY = y2;
+				
+				final VelocityTracker velocityTracker = this.velocityTracker;
+				velocityTracker.computeCurrentVelocity(1000, maximumVelocity);
+				velocityX = (int) velocityTracker.getXVelocity();
+				velocityY = (int) velocityTracker.getYVelocity();
 
 				scrollBy(diffX, diffY);
 				break;
 			}
 			case MotionEvent.ACTION_UP: {
-				final VelocityTracker velocityTracker = this.velocityTracker;
-				velocityTracker.computeCurrentVelocity(1000, maximumVelocity);
-				int velocityX = (int) velocityTracker.getXVelocity();
-				int velocityY = (int) velocityTracker.getYVelocity();
-
 				if (Math.abs(velocityX) > minimumVelocity || Math.abs(velocityY) > minimumVelocity) {
 					flinger.start(getActualScrollX(), getActualScrollY(), velocityX, velocityY, getMaxScrollX(), getMaxScrollY());
 				} else {
@@ -223,6 +227,8 @@ public class TableFixHeaders extends ViewGroup {
 						this.velocityTracker = null;
 					}
 				}
+				velocityX = 0;
+				velocityY = 0;
 				break;
 			}
 		}
