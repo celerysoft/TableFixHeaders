@@ -1,4 +1,4 @@
-package com.inqbarna.tablefixheaders;
+package com.inqbarna.tablefixheaders.libs;
 
 import java.util.Stack;
 

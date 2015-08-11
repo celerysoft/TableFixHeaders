@@ -1,9 +1,9 @@
-package com.inqbarna.tablefixheaders;
+package com.inqbarna.tablefixheaders.libs;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.inqbarna.tablefixheaders.adapters.TableAdapter;
+import com.inqbarna.tablefixheaders.libs.adapters.TableAdapter;
 import com.inqbarna.tablefixheaders.samples.R;
 
 import android.annotation.SuppressLint;
@@ -13,7 +13,6 @@ import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;

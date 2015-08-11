@@ -1,4 +1,5 @@
-package com.inqbarna.tablefixheaders.adapters;
+package com.inqbarna.tablefixheaders.libs.adapters;
+
 
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;

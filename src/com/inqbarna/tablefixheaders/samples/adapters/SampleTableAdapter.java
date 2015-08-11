@@ -1,6 +1,6 @@
 package com.inqbarna.tablefixheaders.samples.adapters;
 
-import com.inqbarna.tablefixheaders.adapters.BaseTableAdapter;
+import com.inqbarna.tablefixheaders.libs.adapters.BaseTableAdapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

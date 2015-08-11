@@ -1,6 +1,6 @@
 package com.inqbarna.tablefixheaders.samples;
 
-import com.inqbarna.tablefixheaders.TableFixHeaders;
+import com.inqbarna.tablefixheaders.libs.TableFixHeaders;
 import com.inqbarna.tablefixheaders.samples.adapters.MatrixTableAdapter;
 
 import android.app.Activity;

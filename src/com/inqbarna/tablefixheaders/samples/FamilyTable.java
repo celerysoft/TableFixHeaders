@@ -3,8 +3,8 @@ package com.inqbarna.tablefixheaders.samples;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.inqbarna.tablefixheaders.TableFixHeaders;
-import com.inqbarna.tablefixheaders.adapters.BaseTableAdapter;
+import com.inqbarna.tablefixheaders.libs.TableFixHeaders;
+import com.inqbarna.tablefixheaders.libs.adapters.BaseTableAdapter;
 
 import android.app.Activity;
 import android.content.Context;

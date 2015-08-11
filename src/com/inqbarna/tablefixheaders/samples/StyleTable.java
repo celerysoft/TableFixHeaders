@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 
-import com.inqbarna.tablefixheaders.TableFixHeaders;
+import com.inqbarna.tablefixheaders.libs.TableFixHeaders;
 import com.inqbarna.tablefixheaders.samples.adapters.SampleTableAdapter;
 
 public class StyleTable extends Activity {
