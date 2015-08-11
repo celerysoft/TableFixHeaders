@@ -16,9 +16,15 @@ U can follow the repository here: **https://github.com/InQBarna/TableFixHeaders*
 
 * Shadows when there is more info to scroll.
 
+## New Features
+
+* Gesture bug fix.
+
+* Scrollbar added.
+
 ## Technical information
 
-* Required minimum API level: 4
+* Required minimum API level: 5
 
 * Supports all the screens sizes and density.
 
