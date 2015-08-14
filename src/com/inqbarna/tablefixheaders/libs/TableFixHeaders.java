@@ -558,6 +558,12 @@ public class TableFixHeaders extends ViewGroup {
 	public void removeView(View view) {
 		super.removeView(view);
 
+		if (view.getTag(R.id.tag_row) != null) {
+			int row = (Integer)view.getTag(R.id.tag_row);
+			int column = (Integer)view.getTag(R.id.tag_column);
+			view.setBackgroundResource(adapter.getBackgroundResource(row, column));
+		}
+		
 		final int typeView = (Integer) view.getTag(R.id.tag_type_view);
 		if (typeView != TableAdapter.IGNORE_ITEM_VIEW_TYPE) {
 			recycler.addRecycledView(view, typeView);
@@ -956,6 +962,26 @@ public class TableFixHeaders extends ViewGroup {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * select a row
+	 * @param selectedRow seleted row index, table header's row index is 0
+	 */
+	public void setSelectedRow(int selectedRow)
+	{
+		if (selectedRow <= 0 || selectedRow > adapter.getRowCount()) {
+			return;
+		}
+		
+		int scrollToY = sumArray(heights, 1, selectedRow) - heights[selectedRow] - shadowSize;
+		scrollToY = scrollToY < getMaxScrollY() ? scrollToY : getMaxScrollY();
+		if (scrollToY > 0) {
+			scrollTo(0, scrollToY);
+		} else {
+			scrollTo(0, 0);
+		}
+		highlightRow(selectedRow);
 	}
 
 	private class TableAdapterDataSetObserver extends DataSetObserver {
