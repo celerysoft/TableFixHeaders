@@ -16,6 +16,7 @@ public class StyleTable extends Activity {
 		setContentView(R.layout.table);
 
 		TableFixHeaders tableFixHeaders = (TableFixHeaders) findViewById(R.id.table);
+		tableFixHeaders.setRowSelectable(true);
 		tableFixHeaders.setAdapter(new MyAdapter(this));
 	}
 
@@ -23,6 +24,10 @@ public class StyleTable extends Activity {
 
 		private final int width;
 		private final int height;
+		
+		private final int VIEW_TYPE_HEADER = 0;
+		private final int VIEW_TYPE_ITEM = 1;
+		private final int VIEW_TYPE_COUNT = 2;
 
 		public MyAdapter(Context context) {
 			super(context);
@@ -62,11 +67,11 @@ public class StyleTable extends Activity {
 		public int getLayoutResource(int row, int column) {
 			final int layoutResource;
 			switch (getItemViewType(row, column)) {
-				case 0:
-					layoutResource = R.layout.item_table1_header;
+				case VIEW_TYPE_HEADER:
+					layoutResource = R.layout.item_style_table_header;
 				break;
-				case 1:
-					layoutResource = R.layout.item_table1;
+				case VIEW_TYPE_ITEM:
+					layoutResource = R.layout.item_style_table;
 				break;
 				default:
 					throw new RuntimeException("wtf?");
@@ -77,15 +82,32 @@ public class StyleTable extends Activity {
 		@Override
 		public int getItemViewType(int row, int column) {
 			if (row < 0) {
-				return 0;
+				return VIEW_TYPE_HEADER;
 			} else {
-				return 1;
+				return VIEW_TYPE_ITEM;
 			}
 		}
 
 		@Override
 		public int getViewTypeCount() {
-			return 2;
+			return VIEW_TYPE_COUNT;
+		}
+		
+		@Override
+		public int getBackgroundResource(int row, int column)
+		{
+			final int backgroundResource;
+			switch (getItemViewType(row, column)) {
+				case VIEW_TYPE_HEADER:
+					backgroundResource = R.drawable.item_style_table_header;
+				break;
+				case VIEW_TYPE_ITEM:
+					backgroundResource = R.drawable.item_style_table;
+				break;
+				default:
+					throw new RuntimeException("wtf?");
+			}
+			return backgroundResource;
 		}
 	}
 }

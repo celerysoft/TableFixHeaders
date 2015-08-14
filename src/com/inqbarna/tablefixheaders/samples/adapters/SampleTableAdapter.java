@@ -1,6 +1,7 @@
 package com.inqbarna.tablefixheaders.samples.adapters;
 
 import com.inqbarna.tablefixheaders.libs.adapters.BaseTableAdapter;
+import com.inqbarna.tablefixheaders.samples.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -66,7 +67,7 @@ public abstract class SampleTableAdapter extends BaseTableAdapter {
 	 * @param text
 	 */
 	private void setText(View view, String text) {
-		((TextView) view.findViewById(android.R.id.text1)).setText(text);
+		((TextView) view.findViewById(R.id.table_item_text)).setText(text);
 	}
 
 	/**

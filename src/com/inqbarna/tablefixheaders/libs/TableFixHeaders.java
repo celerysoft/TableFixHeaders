@@ -14,6 +14,7 @@ import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -71,6 +72,17 @@ public class TableFixHeaders extends ViewGroup {
 	private VelocityTracker velocityTracker;
 
 	private int touchSlop;
+	
+	private final String DEBUG_TAG = "debug " + this.getClass().getSimpleName();
+	private boolean DEBUG = false;
+	/** set true if u want to select a row **/
+	private boolean rowSelectable;
+	private int lastSelectedRowIndex;
+	private final int NO_ROW_SELECTED = -2;
+	private int touchRowIndex;
+	private float motionDownX;
+	private float motionDownY;
+	private final int THRESHOLD_VALUE_CLICK = 2;
 
 	/**
 	 * Simple constructor to use when creating a view from code.
@@ -140,6 +152,8 @@ public class TableFixHeaders extends ViewGroup {
 
 		this.setHorizontalScrollBarEnabled(true);
 		this.setVerticalScrollBarEnabled(true);
+		
+		this.rowSelectable = false;
 	}
 
 	/**
@@ -209,6 +223,10 @@ public class TableFixHeaders extends ViewGroup {
 
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN: {
+				// used to judge is click action or not
+				motionDownX = getActualMotionX(event);
+				motionDownY = getActualMotionY(event);
+				
 				if (!flinger.isFinished()) { // If scrolling, then stop now
 					flinger.forceFinished();
 				}
@@ -233,6 +251,27 @@ public class TableFixHeaders extends ViewGroup {
 				break;
 			}
 			case MotionEvent.ACTION_UP: {
+				//Click action
+				float motionUpX = getActualMotionX(event);
+				float motionUpY = getActualMotionY(event);
+				if (Math.abs(motionUpX - motionDownX) < THRESHOLD_VALUE_CLICK && Math.abs(motionUpY - motionDownY) < THRESHOLD_VALUE_CLICK) {
+					// handle highlight selected row
+					if (rowSelectable) {
+						touchRowIndex = getTouchRowIndex();
+						if (lastSelectedRowIndex == touchRowIndex) {
+							clearHighlightSelectedRow();
+						} else {
+							highlightRow(touchRowIndex);
+						}
+						if (DEBUG) {
+							Log.d(DEBUG_TAG, "Click action");
+							Log.d(DEBUG_TAG, "upX - donwX = " + (motionUpX - motionDownX));
+							Log.d(DEBUG_TAG, "upX - donwX = " + (motionUpY - motionDownY));
+							Log.d(DEBUG_TAG, "touchRowIndex: " + touchRowIndex);
+						}	
+					}
+				}
+				
 				if (Math.abs(velocityX) > minimumVelocity || Math.abs(velocityY) > minimumVelocity) {
 					flinger.start(getActualScrollX(), getActualScrollY(), velocityX, velocityY, getMaxScrollX(), getMaxScrollY());
 				} else {
@@ -841,6 +880,81 @@ public class TableFixHeaders extends ViewGroup {
 			addView(view, getChildCount() - 5);
 		} else {
 			addView(view, 0);
+		}
+	}
+	
+	private float getActualMotionX(MotionEvent event)
+	{
+		return event.getX() + getActualScrollX();
+	}
+	
+	private float getActualMotionY(MotionEvent event)
+	{
+		return event.getY() + getActualScrollY();
+	}
+	
+	/**
+	 * set the row is selectable or not
+	 * @param selectable set true if u want to select a row
+	 */
+	public void setRowSelectable(boolean rowSelectable)
+	{
+		this.rowSelectable = rowSelectable;
+	}
+	
+	private int getTouchRowIndex()
+	{
+		int rowIndex = 0;
+		int heightSum = 0;
+		for (int i=0; i < this.heights.length; i++) {
+			heightSum += heights[i];
+			if (motionDownY - heightSum > 0) {
+				rowIndex++;
+			}
+		}
+		if (DEBUG) {
+			Log.d("debug", "touchRowIndex: " + rowIndex);
+		}
+		return rowIndex;
+	}
+	
+	private void highlightRow(int row)
+	{
+		if (row == 0) {
+			return;
+		}
+		
+		lastSelectedRowIndex = row;
+		
+		int childCount = this.getChildCount();
+		for (int i = 0; i < childCount; ++i) {
+			View view = getChildAt(i);
+			if (view.getTag(R.id.tag_row) != null) {
+				int rowIndex = (Integer)view.getTag(R.id.tag_row);
+				int columnIndex = (Integer)view.getTag(R.id.tag_column);
+				//header's row and column index is -1(both);
+				if (rowIndex == row - 1 && columnIndex == -1) {
+					view.setBackgroundResource(R.drawable.item_highlight_rect);
+				} else {
+					view.setBackgroundResource(adapter.getBackgroundResource(rowIndex, columnIndex));
+				}
+			}
+		}
+	}
+	
+	public void clearHighlightSelectedRow()
+	{
+		lastSelectedRowIndex = NO_ROW_SELECTED;
+		int childCount = this.getChildCount();
+		for (int i = 0; i < childCount; ++i) {
+			View view = getChildAt(i);
+			if (view.getTag(R.id.tag_row) != null) {
+				int rowIndex = (Integer)view.getTag(R.id.tag_row);
+				int columnIndex = (Integer)view.getTag(R.id.tag_column);
+				if (rowIndex >= 0 && columnIndex == -1) {
+					view.setBackgroundResource(adapter.getBackgroundResource(rowIndex, columnIndex));
+				}
+			}
 		}
 	}
 

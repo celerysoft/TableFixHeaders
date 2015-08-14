@@ -79,4 +79,12 @@ public class MatrixTableAdapter<T> extends BaseTableAdapter {
 	public int getViewTypeCount() {
 		return 1;
 	}
+
+	@Override
+	public int getBackgroundResource(int row, int column)
+	{
+		return 0;
+	}
+	
+	
 }

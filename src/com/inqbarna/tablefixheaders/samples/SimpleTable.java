@@ -79,6 +79,7 @@ public class SimpleTable extends Activity {
 						"fugiat",
 						"nulla" },
 		});
+		tableFixHeaders.setRowSelectable(true);
 		tableFixHeaders.setAdapter(matrixTableAdapter);
 	}
 }

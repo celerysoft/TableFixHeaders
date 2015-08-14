@@ -127,5 +127,24 @@ public interface TableAdapter {
 	 * @return The number of types of Views that will be created by this adapter
 	 */
 	public int getViewTypeCount();
+	
+	/**
+	 * Get the background resource of View that will be created by
+	 * {@link #getView(int, int, View, ViewGroup)} for the specified item.
+	 * 
+	 * @param row
+	 *            The row of the item within the adapter's data table of the
+	 *            item whose view we want. If the row is <code>-1</code> it is
+	 *            the header.
+	 * @param column
+	 *            The column of the item within the adapter's data table of the
+	 *            item whose view we want. If the column is <code>-1</code> it
+	 *            is the header.
+	 * @return An integer representing the background resource of View. Two views should share
+	 *         the same background resource if one can be converted to the other in
+	 *         {@link #getView(int, int, View, ViewGroup)}. Also, they should have the 
+	 *         same type of View in {@link #getItemViewType(int, int)}.
+	 */
+	public int getBackgroundResource(int row, int column);
 
 }

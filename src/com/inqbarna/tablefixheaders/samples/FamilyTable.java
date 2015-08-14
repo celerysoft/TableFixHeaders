@@ -55,6 +55,7 @@ public class FamilyTable extends Activity {
 
 		TableFixHeaders tableFixHeaders = (TableFixHeaders) findViewById(R.id.table);
 		BaseTableAdapter baseTableAdapter = new FamilyNexusAdapter(this);
+		tableFixHeaders.setRowSelectable(true);
 		tableFixHeaders.setAdapter(baseTableAdapter);
 	}
 
@@ -143,7 +144,7 @@ public class FamilyTable extends Activity {
 			if (convertView == null) {
 				convertView = getLayoutInflater().inflate(R.layout.item_table_header_first, parent, false);
 			}
-			((TextView) convertView.findViewById(android.R.id.text1)).setText(headers[0]);
+			((TextView) convertView.findViewById(R.id.table_item_text)).setText(headers[0]);
 			return convertView;
 		}
 
@@ -151,7 +152,7 @@ public class FamilyTable extends Activity {
 			if (convertView == null) {
 				convertView = getLayoutInflater().inflate(R.layout.item_table_header, parent, false);
 			}
-			((TextView) convertView.findViewById(android.R.id.text1)).setText(headers[column + 1]);
+			((TextView) convertView.findViewById(R.id.table_item_text)).setText(headers[column + 1]);
 			return convertView;
 		}
 
@@ -160,7 +161,7 @@ public class FamilyTable extends Activity {
 				convertView = getLayoutInflater().inflate(R.layout.item_table_first, parent, false);
 			}
 			convertView.setBackgroundResource(row % 2 == 0 ? R.drawable.bg_table_color1 : R.drawable.bg_table_color2);
-			((TextView) convertView.findViewById(android.R.id.text1)).setText(getDevice(row).data[column + 1]);
+			((TextView) convertView.findViewById(R.id.table_item_text)).setText(getDevice(row).data[column + 1]);
 			return convertView;
 		}
 
@@ -169,7 +170,7 @@ public class FamilyTable extends Activity {
 				convertView = getLayoutInflater().inflate(R.layout.item_table, parent, false);
 			}
 			convertView.setBackgroundResource(row % 2 == 0 ? R.drawable.bg_table_color1 : R.drawable.bg_table_color2);
-			((TextView) convertView.findViewById(android.R.id.text1)).setText(getDevice(row).data[column + 1]);
+			((TextView) convertView.findViewById(R.id.table_item_text)).setText(getDevice(row).data[column + 1]);
 			return convertView;
 		}
 
@@ -183,7 +184,7 @@ public class FamilyTable extends Activity {
 			} else {
 				string = "";
 			}
-			((TextView) convertView.findViewById(android.R.id.text1)).setText(string);
+			((TextView) convertView.findViewById(R.id.table_item_text)).setText(string);
 			return convertView;
 		}
 
@@ -253,6 +254,33 @@ public class FamilyTable extends Activity {
 		@Override
 		public int getViewTypeCount() {
 			return 5;
+		}
+		
+		@Override
+		public int getBackgroundResource(int row, int column)
+		{
+			int backgroundResource = 0;
+			final int itemViewType = getItemViewType(row, column);
+			switch (itemViewType) {
+			case 0:
+				backgroundResource = R.drawable.bg_table_header;
+				break;
+			case 1:
+				backgroundResource = R.drawable.bg_table_header;
+				break;
+			case 2:
+				backgroundResource = row % 2 == 0 ? R.drawable.bg_table_color1 : R.drawable.bg_table_color2;
+				break;
+			case 3:
+				backgroundResource = row % 2 == 0 ? R.drawable.bg_table_color1 : R.drawable.bg_table_color2;
+				break;
+			case 4:
+				backgroundResource = R.drawable.bg_table_family;
+				break;
+			default:
+				throw new RuntimeException("wtf?");
+			}
+			return backgroundResource;
 		}
 	}
 }
