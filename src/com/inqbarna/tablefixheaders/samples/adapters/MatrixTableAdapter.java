@@ -10,7 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class MatrixTableAdapter<T> extends BaseTableAdapter {
+public class MatrixTableAdapter<T> extends BaseTableAdapter
+{
 
 	private final static int WIDTH_DIP = 110;
 	private final static int HEIGHT_DIP = 32;
@@ -22,36 +23,45 @@ public class MatrixTableAdapter<T> extends BaseTableAdapter {
 	private final int width;
 	private final int height;
 
-	public MatrixTableAdapter(Context context) {
+	public MatrixTableAdapter(Context context)
+	{
 		this(context, null);
 	}
 
-	public MatrixTableAdapter(Context context, T[][] table) {
+	public MatrixTableAdapter(Context context, T[][] table)
+	{
 		this.context = context;
 		Resources r = context.getResources();
 
-		width = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, WIDTH_DIP, r.getDisplayMetrics()));
-		height = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, HEIGHT_DIP, r.getDisplayMetrics()));
+		width = Math.round(TypedValue.applyDimension(
+				TypedValue.COMPLEX_UNIT_DIP, WIDTH_DIP, r.getDisplayMetrics()));
+		height = Math
+				.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+						HEIGHT_DIP, r.getDisplayMetrics()));
 
 		setInformation(table);
 	}
 
-	public void setInformation(T[][] table) {
+	public void setInformation(T[][] table)
+	{
 		this.table = table;
 	}
 
 	@Override
-	public int getRowCount() {
+	public int getRowCount()
+	{
 		return table.length - 1;
 	}
 
 	@Override
-	public int getColumnCount() {
+	public int getColumnCount()
+	{
 		return table[0].length - 1;
 	}
 
 	@Override
-	public View getView(int row, int column, View convertView, ViewGroup parent) {
+	public View getView(int row, int column, View convertView, ViewGroup parent)
+	{
 		if (convertView == null) {
 			convertView = new TextView(context);
 			((TextView) convertView).setGravity(Gravity.CENTER_VERTICAL);
@@ -61,22 +71,26 @@ public class MatrixTableAdapter<T> extends BaseTableAdapter {
 	}
 
 	@Override
-	public int getHeight(int row) {
+	public int getHeight(int row)
+	{
 		return height;
 	}
 
 	@Override
-	public int getWidth(int column) {
+	public int getWidth(int column)
+	{
 		return width;
 	}
 
 	@Override
-	public int getItemViewType(int row, int column) {
+	public int getItemViewType(int row, int column)
+	{
 		return 0;
 	}
 
 	@Override
-	public int getViewTypeCount() {
+	public int getViewTypeCount()
+	{
 		return 1;
 	}
 
@@ -85,6 +99,5 @@ public class MatrixTableAdapter<T> extends BaseTableAdapter {
 	{
 		return 0;
 	}
-	
-	
+
 }

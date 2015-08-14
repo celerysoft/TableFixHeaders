@@ -1016,7 +1016,8 @@ public class TableFixHeaders extends ViewGroup {
 			return scroller.isFinished();
 		}
 
-		void forceFinished() {
+		void forceFinished()
+		{
 			if (!scroller.isFinished()) {
 				scroller.forceFinished(true);
 			}

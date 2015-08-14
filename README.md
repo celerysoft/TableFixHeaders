@@ -22,6 +22,8 @@ U can follow the repository here: **https://github.com/InQBarna/TableFixHeaders*
 
 * Scrollbar added.
 
+* Tap and select a row.
+
 ## Technical information
 
 * Required minimum API level: 5
