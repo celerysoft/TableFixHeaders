@@ -27,7 +27,7 @@ import android.widget.Scroller;
  * This view shows a table which can scroll in both directions. Also still
  * leaves the headers fixed.
  * 
- * @author Brais Gabín (InQBarna)
+ * @author Brais Gabín (InQBarna), CeleryQin
  */
 public class TableFixHeaders extends ViewGroup {
 	private int currentX;
@@ -74,7 +74,7 @@ public class TableFixHeaders extends ViewGroup {
 	private int touchSlop;
 	
 	private final String DEBUG_TAG = "debug " + this.getClass().getSimpleName();
-	private boolean DEBUG = false;
+	private boolean DEBUG = true;
 	/** set true if u want to select a row **/
 	private boolean rowSelectable;
 	private int lastSelectedRowIndex;
@@ -743,8 +743,12 @@ public class TableFixHeaders extends ViewGroup {
 				}
 
 				shadowsVisibility();
+				
 			}
 		}
+		
+		highlightRow(lastSelectedRowIndex);
+		
 	}
 
 	private void scrollBounds() {
