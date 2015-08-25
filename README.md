@@ -35,6 +35,10 @@ You can download the app test from here: http://bit.ly/13buAIq
 
 ![QR](https://raw.github.com/InQBarna/TableFixHeaders/master/web/qr.png "Sample")
 
+Or if you are in China, download the app test from here: http://pan.baidu.com/s/1c0ptine
+
+download password: **x7hq**
+
 ## Screenshots
 ![Screenshot 1](https://raw.github.com/InQBarna/TableFixHeaders/master/web/screen1.png "Screenshot 1")
 
