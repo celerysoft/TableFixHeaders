@@ -1,8 +1,8 @@
 # TableFixHeaders
 ## What is it?
 TableFixHeaders is an Android widget to display tables with headers.  
-The author seems do not update this library any more, so I try to fix some bug for it.  
-U can follow the repository here: **https://github.com/InQBarna/TableFixHeaders**  
+The author seems do not maintain this library any more, so I try to fix several bugs and add some new features for it.  
+U can follow the origin repository here: **https://github.com/InQBarna/TableFixHeaders**  
 
 ## Features
 
@@ -26,7 +26,7 @@ U can follow the repository here: **https://github.com/InQBarna/TableFixHeaders*
 
 ## Technical information
 
-* Required minimum API level: 5
+* Required minimum API level: 14
 
 * Supports all the screens sizes and density.
 
@@ -35,9 +35,9 @@ You can download the app test from here: http://bit.ly/13buAIq
 
 ![QR](https://raw.github.com/InQBarna/TableFixHeaders/master/web/qr.png "Sample")
 
-Or if you are in China, download the app test from here: http://pan.baidu.com/s/1c0ptine
+Or if you are in China, download the app test from here: https://pan.baidu.com/s/1cHsghw
 
-download password: **x7hq**
+download password: **ry5w**
 
 ## Screenshots
 ![Screenshot 1](https://raw.github.com/InQBarna/TableFixHeaders/master/web/screen1.png "Screenshot 1")
@@ -46,16 +46,4 @@ download password: **x7hq**
 
 ## License
 
-    Copyright 2012-2013 InQBarna
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+[Apache License, Version 2.0](./LICENSE)
