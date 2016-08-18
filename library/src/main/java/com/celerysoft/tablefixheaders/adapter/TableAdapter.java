@@ -1,4 +1,4 @@
-package com.celerysoft.tablefixheaders2015.adapters;
+package com.celerysoft.tablefixheaders.adapter;
 
 import android.database.DataSetObserver;
 import android.view.View;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
  * The Adapter is also responsible for making a View for each item in the data
  * set.
  * @author Brais Gab�n (InQBarna), CeleryQin
- * @see com.celerysoft.tablefixheaders2015.TableFixHeaders
+ * @see com.celerysoft.tablefixheaders.TableFixHeaders
  */
 public interface TableAdapter
 {
@@ -124,6 +124,16 @@ public interface TableAdapter
 	 *         {@link #getView(int, int, View, ViewGroup)}. Also, they should
 	 *         have the same type of View in {@link #getItemViewType(int, int)}.
 	 */
-	int getBackgroundResource(int row, int column);
+	int getBackgroundResId(int row, int column);
 
+	/**
+	 * Get the bakcground resource of View that will be created by
+	 * {@link #getView(int, int, View, ViewGroup)} for the specified item when it is selected.
+	 * @param row
+	 * @param column
+     * @return
+     */
+	int getBackgroundHighlightResId(int row, int column);
+
+	boolean isRowSelectable(int row);
 }

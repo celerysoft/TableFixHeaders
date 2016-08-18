@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import com.celerysoft.demo.adapters.MatrixTableAdapter;
-import com.celerysoft.tablefixheaders2015.TableFixHeaders;
+import com.celerysoft.tablefixheaders.TableFixHeaders;
 
 public class SimpleTable extends Activity
 {

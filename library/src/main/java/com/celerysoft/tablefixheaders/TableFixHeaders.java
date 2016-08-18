@@ -1,4 +1,4 @@
-package com.celerysoft.tablefixheaders2015;
+package com.celerysoft.tablefixheaders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Scroller;
 
-import com.celerysoft.tablefixheaders2015.adapters.TableAdapter;
+import com.celerysoft.tablefixheaders.adapter.TableAdapter;
+import com.celerysoft.tablefixheaders2015.R;
 
 /**
  * This view shows a table which can scroll in both directions. Also still
@@ -40,7 +41,9 @@ public class TableFixHeaders extends ViewGroup {
 	private int scrollY;
 	private int firstRow;
 	private int firstColumn;
+	/** store all the width of table's cell **/
 	private int[] widths;
+	/** store all the width of table's cell **/
 	private int[] heights;
 
 	@SuppressWarnings("unused")
@@ -72,12 +75,12 @@ public class TableFixHeaders extends ViewGroup {
 
 	private int touchSlop;
 	
-	private final String DEBUG_TAG = "debug " + this.getClass().getSimpleName();
+	private final String TAG = "TableFixHeaders";
 	private boolean DEBUG = true;
-	/** set true if u want to select a row **/
+	/** set true if u want to select a row, default is true **/
 	private boolean rowSelectable;
-	private int lastSelectedRowIndex;
 	private final int NO_ROW_SELECTED = -2;
+	private int lastSelectedRowIndex = NO_ROW_SELECTED;
 	private int touchRowIndex;
 	private float motionDownX;
 	private float motionDownY;
@@ -257,16 +260,20 @@ public class TableFixHeaders extends ViewGroup {
 					// handle highlight selected row
 					if (rowSelectable) {
 						touchRowIndex = getTouchRowIndex();
-						if (lastSelectedRowIndex == touchRowIndex) {
-							clearHighlightSelectedRow();
+						clearHighlightSelectedRow();
+						if (lastSelectedRowIndex != touchRowIndex) {
+							if (adapter.isRowSelectable(touchRowIndex)) {
+								highlightRow(touchRowIndex);
+								lastSelectedRowIndex = touchRowIndex;
+							}
 						} else {
-							highlightRow(touchRowIndex);
+							lastSelectedRowIndex = NO_ROW_SELECTED;
 						}
 						if (DEBUG) {
-							Log.d(DEBUG_TAG, "Click action");
-							Log.d(DEBUG_TAG, "upX - donwX = " + (motionUpX - motionDownX));
-							Log.d(DEBUG_TAG, "upX - donwX = " + (motionUpY - motionDownY));
-							Log.d(DEBUG_TAG, "touchRowIndex: " + touchRowIndex);
+							Log.d(TAG, "Click action");
+							Log.d(TAG, "upX - downX = " + (motionUpX - motionDownX));
+							Log.d(TAG, "upX - downX = " + (motionUpY - motionDownY));
+							Log.d(TAG, "touchRowIndex: " + touchRowIndex);
 						}	
 					}
 				}
@@ -560,7 +567,7 @@ public class TableFixHeaders extends ViewGroup {
 		if (view.getTag(R.id.tag_row) != null) {
 			int row = (Integer)view.getTag(R.id.tag_row);
 			int column = (Integer)view.getTag(R.id.tag_column);
-			view.setBackgroundResource(adapter.getBackgroundResource(row, column));
+			view.setBackgroundResource(adapter.getBackgroundResId(row, column));
 		}
 		
 		final int typeView = (Integer) view.getTag(R.id.tag_type_view);
@@ -745,9 +752,10 @@ public class TableFixHeaders extends ViewGroup {
 				
 			}
 		}
-		
-		highlightRow(lastSelectedRowIndex);
-		
+
+		if (lastSelectedRowIndex != NO_ROW_SELECTED) {
+			highlightRow(lastSelectedRowIndex);
+		}
 	}
 
 	private void scrollBounds() {
@@ -901,7 +909,11 @@ public class TableFixHeaders extends ViewGroup {
 	{
 		return event.getY() + getActualScrollY();
 	}
-	
+
+
+	public boolean isRowSelectable() {
+		return rowSelectable;
+	}
 	/**
 	 * set the row is selectable or not
 	 * @param rowSelectable set true if u want to select a row
@@ -911,31 +923,25 @@ public class TableFixHeaders extends ViewGroup {
 		this.rowSelectable = rowSelectable;
 	}
 	
-	private int getTouchRowIndex()
-	{
-		int rowIndex = 0;
+	private int getTouchRowIndex() {
+		int rowIndex = -1;
 		int heightSum = 0;
-		for (int i=0; i < this.heights.length; i++) {
+
+		int rowCount = this.heights.length;
+		for (int i = 0; i < rowCount; i++) {
 			heightSum += heights[i];
-			if (motionDownY - heightSum > 0) {
+			if (motionDownY > heightSum) {
 				rowIndex++;
 			}
 		}
-		if (DEBUG) {
-			Log.d("debug", "touchRowIndex: " + rowIndex);
-		}
+
 		return rowIndex;
 	}
 	
-	private void highlightRow(int row)
-	{
-		if (row == 0) {
+	private void highlightRow(int row) {
+		if (row == -1) {
 			return;
 		}
-		
-		lastSelectedRowIndex = row;
-
-		//adapter.highlightRow(row);
 		
 		int childCount = this.getChildCount();
 		for (int i = 0; i < childCount; ++i) {
@@ -944,41 +950,39 @@ public class TableFixHeaders extends ViewGroup {
 				int rowIndex = (Integer)view.getTag(R.id.tag_row);
 				int columnIndex = (Integer)view.getTag(R.id.tag_column);
 				//header's row and column index is -1(both);
-				if (rowIndex == row - 1 && columnIndex == -1) {
-					view.setBackgroundResource(R.drawable.item_highlight_rect);
-				} else {
-					view.setBackgroundResource(adapter.getBackgroundResource(rowIndex, columnIndex));
+//				if (rowIndex == row && columnIndex == -1) {
+//					view.setBackgroundResource(adapter.getBackgroundHighlightResId(rowIndex, columnIndex));
+//				} else {
+//					view.setBackgroundResource(adapter.getBackgroundResId(rowIndex, columnIndex));
+//				}
+				if (rowIndex == row) {
+					view.setBackgroundResource(adapter.getBackgroundHighlightResId(rowIndex, columnIndex));
 				}
 			}
 		}
 	}
 	
-	public void clearHighlightSelectedRow()
-	{
-		lastSelectedRowIndex = NO_ROW_SELECTED;
-
-		//adapter.clearHighlightSelectedRow();
-
+	public void clearHighlightSelectedRow() {
 		int childCount = this.getChildCount();
 		for (int i = 0; i < childCount; ++i) {
 			View view = getChildAt(i);
 			if (view.getTag(R.id.tag_row) != null) {
 				int rowIndex = (Integer)view.getTag(R.id.tag_row);
 				int columnIndex = (Integer)view.getTag(R.id.tag_column);
-				if (rowIndex >= 0 && columnIndex == -1) {
-					view.setBackgroundResource(adapter.getBackgroundResource(rowIndex, columnIndex));
-				}
+//				if (rowIndex >= 0 && columnIndex == -1) {
+//					view.setBackgroundResource(adapter.getBackgroundResId(rowIndex, columnIndex));
+//				}
+				view.setBackgroundResource(adapter.getBackgroundResId(rowIndex, columnIndex));
 			}
 		}
 	}
 	
 	/**
-	 * select a row
-	 * @param selectedRow seleted row index, table header's row index is 0
+	 * select a row manually
+	 * @param selectedRow seleted row index, table header's row index is -1
 	 */
-	public void setSelectedRow(int selectedRow)
-	{
-		if (selectedRow <= 0 || selectedRow > adapter.getRowCount()) {
+	public void setSelectedRow(int selectedRow) {
+		if (selectedRow <= -1 || selectedRow > adapter.getRowCount()) {
 			return;
 		}
 		

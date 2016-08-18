@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.celerysoft.tablefixheaders2015.TableFixHeaders;
-import com.celerysoft.tablefixheaders2015.adapters.BaseTableAdapter;
+import com.celerysoft.tablefixheaders.TableFixHeaders;
+import com.celerysoft.tablefixheaders.adapter.BaseTableAdapter;
 
 public class FamilyTable extends Activity
 {
@@ -290,7 +290,7 @@ public class FamilyTable extends Activity
 		}
 
 		@Override
-		public int getBackgroundResource(int row, int column)
+		public int getBackgroundResId(int row, int column)
 		{
 			int backgroundResource = 0;
 			final int itemViewType = getItemViewType(row, column);
@@ -316,6 +316,16 @@ public class FamilyTable extends Activity
 				throw new RuntimeException("wtf?");
 			}
 			return backgroundResource;
+		}
+
+		@Override
+		public int getBackgroundHighlightResId(int row, int column) {
+			return R.drawable.item_highlight_rect;
+		}
+
+		@Override
+		public boolean isRowSelectable(int row) {
+			return !isFamily(row);
 		}
 	}
 }

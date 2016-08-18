@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.celerysoft.demo.R;
-import com.celerysoft.tablefixheaders2015.adapters.BaseTableAdapter;
+import com.celerysoft.tablefixheaders.adapter.BaseTableAdapter;
 
 /**
  * This class implements the main functionalities of the TableAdapter in

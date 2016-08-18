@@ -1,4 +1,4 @@
-package com.celerysoft.tablefixheaders2015;
+package com.celerysoft.tablefixheaders;
 
 import java.util.Stack;
 

@@ -1,11 +1,11 @@
-package com.celerysoft.tablefixheaders2015.adapters;
+package com.celerysoft.tablefixheaders.adapter;
 
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
 
 /**
  * Common base class of common implementation for an {@link TableAdapter} that
- * can be used in {@link com.celerysoft.tablefixheaders2015.TableFixHeaders}.
+ * can be used in {@link com.celerysoft.tablefixheaders.TableFixHeaders}.
  * @author Brais Gab�n (InQBarna)
  */
 public abstract class BaseTableAdapter implements TableAdapter

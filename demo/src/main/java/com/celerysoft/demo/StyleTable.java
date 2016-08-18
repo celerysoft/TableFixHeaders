@@ -6,7 +6,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 
 import com.celerysoft.demo.adapters.SampleTableAdapter;
-import com.celerysoft.tablefixheaders2015.TableFixHeaders;
+import com.celerysoft.tablefixheaders.TableFixHeaders;
 
 public class StyleTable extends Activity
 {
@@ -106,7 +106,7 @@ public class StyleTable extends Activity
 		}
 
 		@Override
-		public int getBackgroundResource(int row, int column)
+		public int getBackgroundResId(int row, int column)
 		{
 			final int backgroundResource;
 			switch (getItemViewType(row, column)) {
@@ -120,6 +120,16 @@ public class StyleTable extends Activity
 				throw new RuntimeException("wtf?");
 			}
 			return backgroundResource;
+		}
+
+		@Override
+		public int getBackgroundHighlightResId(int row, int column) {
+			return R.drawable.item_highlight_rect;
+		}
+
+		@Override
+		public boolean isRowSelectable(int row) {
+			return true;
 		}
 	}
 }

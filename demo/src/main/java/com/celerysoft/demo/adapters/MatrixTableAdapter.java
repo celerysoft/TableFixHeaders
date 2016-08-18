@@ -8,7 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.celerysoft.tablefixheaders2015.adapters.BaseTableAdapter;
+import com.celerysoft.demo.R;
+import com.celerysoft.tablefixheaders.adapter.BaseTableAdapter;
 
 public class MatrixTableAdapter<T> extends BaseTableAdapter
 {
@@ -95,9 +96,18 @@ public class MatrixTableAdapter<T> extends BaseTableAdapter
 	}
 
 	@Override
-	public int getBackgroundResource(int row, int column)
+	public int getBackgroundResId(int row, int column)
 	{
 		return 0;
 	}
 
+	@Override
+	public int getBackgroundHighlightResId(int row, int column) {
+		return R.drawable.item_highlight_rect;
+	}
+
+	@Override
+	public boolean isRowSelectable(int row) {
+		return true;
+	}
 }
