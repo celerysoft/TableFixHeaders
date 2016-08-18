@@ -82,9 +82,12 @@ public class TableFixHeaders extends ViewGroup {
 	private final int NO_ROW_SELECTED = -2;
 	private int lastSelectedRowIndex = NO_ROW_SELECTED;
 	private int touchRowIndex;
+	private int touchColumnIndex;
 	private float motionDownX;
 	private float motionDownY;
 	private final int THRESHOLD_VALUE_CLICK = 2;
+
+	private OnItemClickListener onItemClickListener;
 
 	/**
 	 * Simple constructor to use when creating a view from code.
@@ -253,29 +256,10 @@ public class TableFixHeaders extends ViewGroup {
 				break;
 			}
 			case MotionEvent.ACTION_UP: {
-				//Click action
 				float motionUpX = getActualMotionX(event);
 				float motionUpY = getActualMotionY(event);
 				if (Math.abs(motionUpX - motionDownX) < THRESHOLD_VALUE_CLICK && Math.abs(motionUpY - motionDownY) < THRESHOLD_VALUE_CLICK) {
-					// handle highlight selected row
-					if (rowSelectable) {
-						touchRowIndex = getTouchRowIndex();
-						clearHighlightSelectedRow();
-						if (lastSelectedRowIndex != touchRowIndex) {
-							if (adapter.isRowSelectable(touchRowIndex)) {
-								highlightRow(touchRowIndex);
-								lastSelectedRowIndex = touchRowIndex;
-							}
-						} else {
-							lastSelectedRowIndex = NO_ROW_SELECTED;
-						}
-						if (DEBUG) {
-							Log.d(TAG, "Click action");
-							Log.d(TAG, "upX - downX = " + (motionUpX - motionDownX));
-							Log.d(TAG, "upX - downX = " + (motionUpY - motionDownY));
-							Log.d(TAG, "touchRowIndex: " + touchRowIndex);
-						}	
-					}
+					performItemClick();
 				}
 				
 				if (Math.abs(velocityX) > minimumVelocity || Math.abs(velocityY) > minimumVelocity) {
@@ -914,6 +898,7 @@ public class TableFixHeaders extends ViewGroup {
 	public boolean isRowSelectable() {
 		return rowSelectable;
 	}
+
 	/**
 	 * set the row is selectable or not
 	 * @param rowSelectable set true if u want to select a row
@@ -922,7 +907,35 @@ public class TableFixHeaders extends ViewGroup {
 	{
 		this.rowSelectable = rowSelectable;
 	}
-	
+
+	private void performItemClick() {
+		touchRowIndex = getTouchRowIndex();
+		touchColumnIndex = getTouchColumnIndex();
+
+		// handle highlight selected row
+		if (rowSelectable) {
+			clearHighlightSelectedRow();
+			if (lastSelectedRowIndex != touchRowIndex) {
+				if (adapter.isRowSelectable(touchRowIndex)) {
+					highlightRow(touchRowIndex);
+					lastSelectedRowIndex = touchRowIndex;
+				}
+			} else {
+				lastSelectedRowIndex = NO_ROW_SELECTED;
+			}
+		}
+
+		if (onItemClickListener != null) {
+			onItemClickListener.onItemClick(this, null, touchRowIndex, touchColumnIndex, 0);
+		}
+
+		if (DEBUG) {
+			Log.d(TAG, "click action");
+			Log.d(TAG, "touchRowIndex: " + touchRowIndex);
+			Log.d(TAG, "touchColumnIndex: " + touchColumnIndex);
+		}
+	}
+
 	private int getTouchRowIndex() {
 		int rowIndex = -1;
 		int heightSum = 0;
@@ -937,6 +950,21 @@ public class TableFixHeaders extends ViewGroup {
 
 		return rowIndex;
 	}
+
+	private int getTouchColumnIndex() {
+		int columnIndex = -1;
+		int widthSum = 0;
+
+		int columnCount = this.widths.length;
+		for (int i = 0; i < columnCount; i++) {
+			widthSum += widths[i];
+			if (motionDownX > widthSum) {
+				columnIndex++;
+			}
+		}
+
+		return columnIndex;
+	}
 	
 	private void highlightRow(int row) {
 		if (row == -1) {
@@ -949,12 +977,6 @@ public class TableFixHeaders extends ViewGroup {
 			if (view.getTag(R.id.tag_row) != null) {
 				int rowIndex = (Integer)view.getTag(R.id.tag_row);
 				int columnIndex = (Integer)view.getTag(R.id.tag_column);
-				//header's row and column index is -1(both);
-//				if (rowIndex == row && columnIndex == -1) {
-//					view.setBackgroundResource(adapter.getBackgroundHighlightResId(rowIndex, columnIndex));
-//				} else {
-//					view.setBackgroundResource(adapter.getBackgroundResId(rowIndex, columnIndex));
-//				}
 				if (rowIndex == row) {
 					view.setBackgroundResource(adapter.getBackgroundHighlightResId(rowIndex, columnIndex));
 				}
@@ -969,9 +991,6 @@ public class TableFixHeaders extends ViewGroup {
 			if (view.getTag(R.id.tag_row) != null) {
 				int rowIndex = (Integer)view.getTag(R.id.tag_row);
 				int columnIndex = (Integer)view.getTag(R.id.tag_column);
-//				if (rowIndex >= 0 && columnIndex == -1) {
-//					view.setBackgroundResource(adapter.getBackgroundResId(rowIndex, columnIndex));
-//				}
 				view.setBackgroundResource(adapter.getBackgroundResId(rowIndex, columnIndex));
 			}
 		}
@@ -994,6 +1013,36 @@ public class TableFixHeaders extends ViewGroup {
 			scrollTo(0, 0);
 		}
 		highlightRow(selectedRow);
+	}
+
+	/**
+	 * Interface definition for a callback to be invoked when an item in this
+	 * TableFixHeaders has been clicked.
+	 */
+	public interface OnItemClickListener {
+		/**
+		 * Callback method to be invoked when an item in this TableFixHeaders has
+		 * been clicked.
+		 * <p>
+		 * Implementers can call getItemAtPosition(position) if they need
+		 * to access the data associated with the selected item.
+		 *
+		 * @param parent The TableFixHeaders where the click happened.
+		 * @param view The view within the TableFixHeaders that was clicked (this
+		 *            will be a view provided by the adapter)
+		 * @param row The row of the view in the adapter.
+		 * @param column The column of the view in the adapter.
+		 * @param id The row id of the item that was clicked.
+		 */
+		void onItemClick(TableFixHeaders parent, View view, int row, int column, long id);
+	}
+
+	public OnItemClickListener getOnItemClickListener() {
+		return onItemClickListener;
+	}
+
+	public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+		this.onItemClickListener = onItemClickListener;
 	}
 
 	private class TableAdapterDataSetObserver extends DataSetObserver {
@@ -1054,8 +1103,7 @@ public class TableFixHeaders extends ViewGroup {
 			return scroller.isFinished();
 		}
 
-		void forceFinished()
-		{
+		void forceFinished() {
 			if (!scroller.isFinished()) {
 				scroller.forceFinished(true);
 			}

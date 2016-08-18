@@ -2,6 +2,8 @@ package com.celerysoft.demo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import com.celerysoft.demo.adapters.MatrixTableAdapter;
 import com.celerysoft.tablefixheaders.TableFixHeaders;
@@ -16,27 +18,34 @@ public class SimpleTable extends Activity
 		setContentView(R.layout.table);
 
 		TableFixHeaders tableFixHeaders = (TableFixHeaders) findViewById(R.id.table);
-		MatrixTableAdapter<String> matrixTableAdapter = new MatrixTableAdapter<String>(
+		final MatrixTableAdapter<String> matrixTableAdapter = new MatrixTableAdapter<String>(
 				this, new String[][] {
-						{ "Header 1", "Header 2", "Header 3", "Header 4",
-								"Header 5", "Header 6" },
-						{ "Lorem", "sed", "do", "eiusmod", "tempor",
+						{ "Row&Column -1", "Column 0", "Column 1", "Column 2",
+								"Column 3", "Column 4" },
+						{ "Row 0", "sed", "do", "eiusmod", "tempor",
 								"incididunt" },
-						{ "ipsum", "irure", "occaecat", "enim", "laborum",
+						{ "Row 1", "irure", "occaecat", "enim", "laborum",
 								"reprehenderit" },
-						{ "dolor", "fugiat", "nulla", "reprehenderit",
+						{ "Row 2", "fugiat", "nulla", "reprehenderit",
 								"laborum", "consequat" },
-						{ "sit", "consequat", "laborum", "fugiat", "eiusmod",
+						{ "Row 3", "consequat", "laborum", "fugiat", "eiusmod",
 								"enim" },
-						{ "amet", "nulla", "Excepteur", "voluptate",
+						{ "Row 4", "nulla", "Excepteur", "voluptate",
 								"occaecat", "et" },
-						{ "consectetur", "occaecat", "fugiat", "dolore",
+						{ "Row 5", "occaecat", "fugiat", "dolore",
 								"consequat", "eiusmod" },
-						{ "adipisicing", "fugiat", "Excepteur", "occaecat",
+						{ "Row 6", "fugiat", "Excepteur", "occaecat",
 								"fugiat", "laborum" },
-						{ "elit", "voluptate", "reprehenderit", "Excepteur",
+						{ "Row 7", "voluptate", "reprehenderit", "Excepteur",
 								"fugiat", "nulla" }, });
 		tableFixHeaders.setRowSelectable(true);
 		tableFixHeaders.setAdapter(matrixTableAdapter);
+
+		tableFixHeaders.setOnItemClickListener(new TableFixHeaders.OnItemClickListener() {
+			@Override
+			public void onItemClick(TableFixHeaders parent, View view, int row, int column, long id) {
+				Toast.makeText(SimpleTable.this, matrixTableAdapter.getInformation(row, column), Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 }
