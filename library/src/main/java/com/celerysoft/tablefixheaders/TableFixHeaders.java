@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.Scroller;
 
 import com.celerysoft.tablefixheaders.adapter.TableAdapter;
-import com.celerysoft.tablefixheaders2015.R;
 
 /**
  * This view shows a table which can scroll in both directions. Also still
@@ -926,13 +925,13 @@ public class TableFixHeaders extends ViewGroup {
 		}
 
 		if (onItemClickListener != null) {
-			onItemClickListener.onItemClick(this, null, touchRowIndex, touchColumnIndex, 0);
+			onItemClickListener.onItemClick(this, null, touchRowIndex + 1, touchColumnIndex + 1, 0);
 		}
 
 		if (DEBUG) {
 			Log.d(TAG, "click action");
-			Log.d(TAG, "touchRowIndex: " + touchRowIndex);
-			Log.d(TAG, "touchColumnIndex: " + touchColumnIndex);
+			Log.d(TAG, String.format("touchRowIndex: %d", touchRowIndex + 1));
+			Log.d(TAG, String.format("touchColumnIndex: %d", touchColumnIndex + 1));
 		}
 	}
 

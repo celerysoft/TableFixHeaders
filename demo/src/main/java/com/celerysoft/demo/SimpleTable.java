@@ -6,7 +6,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.celerysoft.demo.adapters.MatrixTableAdapter;
+import com.celerysoft.demo.adapters.MatrixTableAdapter2;
+import com.celerysoft.demo.bean.Human;
 import com.celerysoft.tablefixheaders.TableFixHeaders;
+
+import java.util.ArrayList;
 
 public class SimpleTable extends Activity
 {
