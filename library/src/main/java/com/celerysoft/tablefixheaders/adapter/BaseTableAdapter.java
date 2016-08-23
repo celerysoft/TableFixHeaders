@@ -6,7 +6,6 @@ import android.database.DataSetObserver;
 /**
  * Common base class of common implementation for an {@link TableAdapter} that
  * can be used in {@link com.celerysoft.tablefixheaders.TableFixHeaders}.
- * @author Brais Gab�n (InQBarna)
  */
 public abstract class BaseTableAdapter implements TableAdapter
 {
@@ -41,5 +40,15 @@ public abstract class BaseTableAdapter implements TableAdapter
 	public void notifyDataSetInvalidated()
 	{
 		mDataSetObservable.notifyInvalidated();
+	}
+
+	@Override
+	public int getViewTypeCount() {
+		return 1;
+	}
+
+	@Override
+	public int getItemViewType(int row, int column) {
+		return 0;
 	}
 }

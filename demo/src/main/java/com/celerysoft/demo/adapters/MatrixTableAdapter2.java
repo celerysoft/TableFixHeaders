@@ -108,4 +108,21 @@ public class MatrixTableAdapter2<T extends AttributeEnumerable> extends BaseTabl
 	public boolean isRowSelectable(int row) {
 		return true;
 	}
+
+	@Override
+	public long getItemId(int row, int column) {
+		return 0;
+	}
+
+	@Override
+	public Object getItem(int row, int column) {
+		if (row <= getRowCount()) {
+			T t = this.list.get(row);
+			if (t != null && column <= getColumnCount()) {
+				return t.getAttribute(column);
+			}
+		}
+
+		return null;
+	}
 }

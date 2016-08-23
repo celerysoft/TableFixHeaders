@@ -45,13 +45,13 @@ public class StyleTable extends Activity
 		@Override
 		public int getRowCount()
 		{
-			return 10;
+			return 20;
 		}
 
 		@Override
 		public int getColumnCount()
 		{
-			return 6;
+			return 10;
 		}
 
 		@Override
@@ -130,6 +130,16 @@ public class StyleTable extends Activity
 		@Override
 		public boolean isRowSelectable(int row) {
 			return true;
+		}
+
+		@Override
+		public long getItemId(int row, int column) {
+			return 0;
+		}
+
+		@Override
+		public Object getItem(int row, int column) {
+			return null;
 		}
 	}
 }

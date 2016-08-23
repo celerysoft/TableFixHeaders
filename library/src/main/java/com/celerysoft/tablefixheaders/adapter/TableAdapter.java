@@ -9,7 +9,7 @@ import android.view.ViewGroup;
  * underlying data for that view. The Adapter provides access to the data items.
  * The Adapter is also responsible for making a View for each item in the data
  * set.
- * @author Brais Gab�n (InQBarna), CeleryQin
+ *
  * @see com.celerysoft.tablefixheaders.TableFixHeaders
  */
 public interface TableAdapter
@@ -127,13 +127,41 @@ public interface TableAdapter
 	int getBackgroundResId(int row, int column);
 
 	/**
-	 * Get the bakcground resource of View that will be created by
+	 * Get the background resource of View that will be created by
 	 * {@link #getView(int, int, View, ViewGroup)} for the specified item when it is selected.
-	 * @param row
-	 * @param column
-     * @return
+	 * @param row The row of the item within the adapter's data table of the item
+	 *            whose view we want. If the row is <code>-1</code> it is the
+	 *            header.
+	 * @param column The column of the item within the adapter's data table of
+	 *            	the item whose view we want. If the column is <code>-1</code>
+	 * 				it is the header.
+     * @return An integer representing the highlight background resource of View.
      */
 	int getBackgroundHighlightResId(int row, int column);
 
+	/**
+	 * Get the data item associated with the specified position in the data set.
+	 *
+	 * @param row row of the item whose data we want within the adapter's data set.
+	 * @param column column of the item whose data we want within the adapter's data set.
+	 * @return The data at the specified position.
+	 */
+	Object getItem(int row, int column);
+
+	/**
+	 * Get the row id associated with the specified position in the list.
+	 *
+	 * @param row The row of the item within the adapter's data set whose item id we want.
+	 * @param column The column of the item within the adapter's data set whose item id we want.
+	 * @return The id of the item at the specified position.
+	 */
+	long getItemId(int row, int column);
+
+	/**
+	 * Indicates whether the row could be selected
+	 *
+	 * @param row the row index
+	 * @return True if the the row could be selected.
+     */
 	boolean isRowSelectable(int row);
 }

@@ -327,5 +327,15 @@ public class FamilyTable extends Activity
 		public boolean isRowSelectable(int row) {
 			return !isFamily(row);
 		}
+
+		@Override
+		public long getItemId(int row, int column) {
+			return 0;
+		}
+
+		@Override
+		public Object getItem(int row, int column) {
+			return null;
+		}
 	}
 }

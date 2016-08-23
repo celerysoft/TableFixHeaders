@@ -53,7 +53,8 @@ public class BeanTable extends Activity
 		tableFixHeaders.setOnItemClickListener(new TableFixHeaders.OnItemClickListener() {
 			@Override
 			public void onItemClick(TableFixHeaders parent, View view, int row, int column, long id) {
-				Toast.makeText(BeanTable.this, adapter.getItem(row).getAttribute(column).toString(), Toast.LENGTH_SHORT).show();
+				//Toast.makeText(BeanTable.this, adapter.getItem(row).getAttribute(column).toString(), Toast.LENGTH_SHORT).show();
+				Toast.makeText(BeanTable.this, adapter.getItem(row, column).toString(), Toast.LENGTH_SHORT).show();
 			}
 		});
 	}

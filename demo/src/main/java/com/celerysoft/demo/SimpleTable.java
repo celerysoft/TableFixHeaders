@@ -48,7 +48,7 @@ public class SimpleTable extends Activity
 		tableFixHeaders.setOnItemClickListener(new TableFixHeaders.OnItemClickListener() {
 			@Override
 			public void onItemClick(TableFixHeaders parent, View view, int row, int column, long id) {
-				Toast.makeText(SimpleTable.this, matrixTableAdapter.getInformation(row, column), Toast.LENGTH_SHORT).show();
+				Toast.makeText(SimpleTable.this, matrixTableAdapter.getItem(row, column).toString(), Toast.LENGTH_SHORT).show();
 			}
 		});
 	}

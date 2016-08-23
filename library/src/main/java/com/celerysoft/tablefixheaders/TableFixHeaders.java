@@ -6,7 +6,6 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.os.Build;
@@ -46,6 +45,7 @@ public class TableFixHeaders extends ViewGroup {
 	private int[] heights;
 
 	@SuppressWarnings("unused")
+	/** The view layout on the top left conner **/
 	private View headView;
 	private List<View> rowViewList;
 	private List<View> columnViewList;
@@ -54,7 +54,9 @@ public class TableFixHeaders extends ViewGroup {
 	private int rowCount;
 	private int columnCount;
 
+	/** the width of TableFixHeaders on screen **/
 	private int width;
+	/** the height of TableFixHeaders on screen **/
 	private int height;
 
 	private Recycler recycler;
@@ -62,7 +64,10 @@ public class TableFixHeaders extends ViewGroup {
 	private TableAdapterDataSetObserver tableAdapterDataSetObserver;
 	private boolean needRelayout;
 
-	private final ImageView[] shadows;
+	/**
+	 * store views of shadow(left, top, right, bottom
+	 */
+	private final ImageView[] shadows = new ImageView[4];
 	private final int shadowSize;
 
 	private final int minimumVelocity;
@@ -84,9 +89,11 @@ public class TableFixHeaders extends ViewGroup {
 	private int touchColumnIndex;
 	private float motionDownX;
 	private float motionDownY;
-	private final int THRESHOLD_VALUE_CLICK = 2;
+	private static final int THRESHOLD_VALUE_CLICK = 2;
+	private static final int THRESHOLD_VALUE_CLICK_TIME = 500;
 
 	private OnItemClickListener onItemClickListener;
+	private OnItemLongClickListener onItemLongClickListener;
 
 	/**
 	 * Simple constructor to use when creating a view from code.
@@ -125,15 +132,7 @@ public class TableFixHeaders extends ViewGroup {
 
 		this.needRelayout = true;
 
-		this.shadows = new ImageView[4];
-		this.shadows[0] = new ImageView(context);
-		this.shadows[0].setImageResource(R.drawable.shadow_left);
-		this.shadows[1] = new ImageView(context);
-		this.shadows[1].setImageResource(R.drawable.shadow_top);
-		this.shadows[2] = new ImageView(context);
-		this.shadows[2].setImageResource(R.drawable.shadow_right);
-		this.shadows[3] = new ImageView(context);
-		this.shadows[3].setImageResource(R.drawable.shadow_bottom);
+		createShadows(context);
 
 		this.shadowSize = getResources().getDimensionPixelSize(R.dimen.shadow_size);
 
@@ -145,19 +144,37 @@ public class TableFixHeaders extends ViewGroup {
 		
 		this.setWillNotDraw(false);
 		
-		final TypedArray a = context.obtainStyledAttributes(R.styleable.View);
-		try {
-			//initializeScrollbars(a);
-		} finally {
-			if (a != null) {
-				a.recycle();
-			}
-		}
+//		final TypedArray a = context.obtainStyledAttributes(R.styleable.View);
+//		try {
+//			Method initializeScrollbars = android.view.View.class.getDeclaredMethod("initializeScrollbars", TypedArray.class);
+//			initializeScrollbars.invoke(this, a);
+//		} catch (NoSuchMethodException e) {
+//			e.printStackTrace();
+//		} catch (InvocationTargetException e) {
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			e.printStackTrace();
+//		} finally {
+//			if (a != null) {
+//				a.recycle();
+//			}
+//		}
+//
+//		this.setHorizontalScrollBarEnabled(true);
+//		this.setVerticalScrollBarEnabled(true);
 
-		this.setHorizontalScrollBarEnabled(true);
-		this.setVerticalScrollBarEnabled(true);
-		
 		this.rowSelectable = false;
+	}
+
+	private void createShadows(Context context) {
+		this.shadows[0] = new ImageView(context);
+		this.shadows[0].setImageResource(R.drawable.shadow_left);
+		this.shadows[1] = new ImageView(context);
+		this.shadows[1].setImageResource(R.drawable.shadow_top);
+		this.shadows[2] = new ImageView(context);
+		this.shadows[2].setImageResource(R.drawable.shadow_right);
+		this.shadows[3] = new ImageView(context);
+		this.shadows[3].setImageResource(R.drawable.shadow_bottom);
 	}
 
 	/**
@@ -258,7 +275,9 @@ public class TableFixHeaders extends ViewGroup {
 				float motionUpX = getActualMotionX(event);
 				float motionUpY = getActualMotionY(event);
 				if (Math.abs(motionUpX - motionDownX) < THRESHOLD_VALUE_CLICK && Math.abs(motionUpY - motionDownY) < THRESHOLD_VALUE_CLICK) {
-					performItemClick();
+					if (event.getEventTime() - event.getDownTime() < THRESHOLD_VALUE_CLICK_TIME) {
+						performItemClick();
+					}
 				}
 				
 				if (Math.abs(velocityX) > minimumVelocity || Math.abs(velocityY) > minimumVelocity) {
@@ -594,6 +613,19 @@ public class TableFixHeaders extends ViewGroup {
 		invalidate();
 	}
 
+	private int sumArray(int array[]) {
+		return sumArray(array, 0, array.length);
+	}
+
+	private int sumArray(int array[], int firstIndex, int count) {
+		int sum = 0;
+		count += firstIndex;
+		for (int i = firstIndex; i < count; i++) {
+			sum += array[i];
+		}
+		return sum;
+	}
+
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -662,19 +694,6 @@ public class TableFixHeaders extends ViewGroup {
 		setMeasuredDimension(w, h);
 	}
 
-	private int sumArray(int array[]) {
-		return sumArray(array, 0, array.length);
-	}
-
-	private int sumArray(int array[], int firstIndex, int count) {
-		int sum = 0;
-		count += firstIndex;
-		for (int i = firstIndex; i < count; i++) {
-			sum += array[i];
-		}
-		return sum;
-	}
-
 	@SuppressLint("DrawAllocation")
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -690,16 +709,19 @@ public class TableFixHeaders extends ViewGroup {
 
 				right = Math.min(width, sumArray(widths));
 				bottom = Math.min(height, sumArray(heights));
+
 				addShadow(shadows[0], widths[0], 0, widths[0] + shadowSize, bottom);
 				addShadow(shadows[1], 0, heights[0], right, heights[0] + shadowSize);
 				addShadow(shadows[2], right - shadowSize, 0, right, bottom);
 				addShadow(shadows[3], 0, bottom - shadowSize, right, bottom);
 
+				// Create and layout head view
 				headView = makeAndSetup(-1, -1, 0, 0, widths[0], heights[0]);
 
 				scrollBounds();
 				adjustFirstCellsAndScroll();
 
+				// Create and layout views of first row
 				left = widths[0] - scrollX;
 				for (int i = firstColumn; i < columnCount && left < width; i++) {
 					right = left + widths[i + 1];
@@ -708,6 +730,7 @@ public class TableFixHeaders extends ViewGroup {
 					left = right;
 				}
 
+				// Create and layout views of first column
 				top = heights[0] - scrollY;
 				for (int i = firstRow; i < rowCount && top < height; i++) {
 					bottom = top + heights[i + 1];
@@ -716,6 +739,7 @@ public class TableFixHeaders extends ViewGroup {
 					top = bottom;
 				}
 
+				// Create and layout all other views
 				top = heights[0] - scrollY;
 				for (int i = firstRow; i < rowCount && top < height; i++) {
 					bottom = top + heights[i + 1];
@@ -741,6 +765,9 @@ public class TableFixHeaders extends ViewGroup {
 		}
 	}
 
+	/**
+	 * Recalculate the scrollX(or Y) if scroll beyond the column(or row)'s bound.
+	 */
 	private void scrollBounds() {
 		scrollX = scrollBounds(scrollX, firstColumn, widths, width);
 		scrollY = scrollBounds(scrollY, firstRow, heights, height);
@@ -769,6 +796,9 @@ public class TableFixHeaders extends ViewGroup {
 		firstRow = values[1];
 	}
 
+	/**
+	 * Calculate first row(or column) base on the scrollY(or X)
+     */
 	private int[] adjustFirstCellsAndScroll(int scroll, int firstCell, int sizes[]) {
 		if (scroll == 0) {
 			// no op
@@ -786,6 +816,9 @@ public class TableFixHeaders extends ViewGroup {
 		return new int[] { scroll, firstCell };
 	}
 
+	/**
+	 * Calculate if the shadows could be visible.
+	 */
 	private void shadowsVisibility() {
 		final int actualScrollX = getActualScrollX();
 		final int actualScrollY = getActualScrollY();
@@ -816,6 +849,9 @@ public class TableFixHeaders extends ViewGroup {
 		addView(imageView);
 	}
 
+	/**
+	 * Clear and remove all views
+	 */
 	private void resetTable() {
 		headView = null;
 		rowViewList.clear();
@@ -856,7 +892,7 @@ public class TableFixHeaders extends ViewGroup {
 		return ret;
 	}
 
-	private View makeView(int row, int column, int w, int h) {
+	private View makeView(int row, int column, int width, int height) {
 		final int itemViewType = adapter.getItemViewType(row, column);
 		final View recycledView;
 		if (itemViewType == TableAdapter.IGNORE_ITEM_VIEW_TYPE) {
@@ -868,11 +904,14 @@ public class TableFixHeaders extends ViewGroup {
 		view.setTag(R.id.tag_type_view, itemViewType);
 		view.setTag(R.id.tag_row, row);
 		view.setTag(R.id.tag_column, column);
-		view.measure(MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY));
+		view.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
 		addTableView(view, row, column);
 		return view;
 	}
 
+	/**
+	 * add table view to the TableFixHeaders, The last 4 Views is the Shadows view.
+     */
 	private void addTableView(View view, int row, int column) {
 		if (row == -1 && column == -1) {
 			addView(view, getChildCount() - 4);
@@ -907,6 +946,13 @@ public class TableFixHeaders extends ViewGroup {
 		this.rowSelectable = rowSelectable;
 	}
 
+	// TODO support item long click callback
+	private void performItemLongClick() {
+		if (onItemLongClickListener != null) {
+			onItemLongClickListener.onItemLongClick(this, null, touchRowIndex + 1, touchColumnIndex + 1, adapter.getItemId(touchRowIndex + 1, touchColumnIndex + 1));
+		}
+	}
+
 	private void performItemClick() {
 		touchRowIndex = getTouchRowIndex();
 		touchColumnIndex = getTouchColumnIndex();
@@ -925,7 +971,7 @@ public class TableFixHeaders extends ViewGroup {
 		}
 
 		if (onItemClickListener != null) {
-			onItemClickListener.onItemClick(this, null, touchRowIndex + 1, touchColumnIndex + 1, 0);
+			onItemClickListener.onItemClick(this, null, touchRowIndex + 1, touchColumnIndex + 1, adapter.getItemId(touchRowIndex + 1, touchColumnIndex + 1));
 		}
 
 		if (DEBUG) {
@@ -1042,6 +1088,18 @@ public class TableFixHeaders extends ViewGroup {
 
 	public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
 		this.onItemClickListener = onItemClickListener;
+	}
+
+	public interface OnItemLongClickListener {
+		void onItemLongClick(TableFixHeaders parent, View view, int row, int column, long id);
+	}
+
+	public OnItemLongClickListener getOnItemLongClickListener() {
+		return onItemLongClickListener;
+	}
+
+	public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+		this.onItemLongClickListener = onItemLongClickListener;
 	}
 
 	private class TableAdapterDataSetObserver extends DataSetObserver {

@@ -45,16 +45,6 @@ public class MatrixTableAdapter<T> extends BaseTableAdapter
 		this.table = table;
 	}
 
-	public T getInformation(int row, int column) {
-//		row += 1;
-//		column += 1;
-		if (row <= getRowCount() && column <= getColumnCount()) {
-			return this.table[row][column];
-		} else {
-			return null;
-		}
-	}
-
 	@Override
 	public int getRowCount()
 	{
@@ -116,5 +106,19 @@ public class MatrixTableAdapter<T> extends BaseTableAdapter
 	@Override
 	public boolean isRowSelectable(int row) {
 		return true;
+	}
+
+	@Override
+	public long getItemId(int row, int column) {
+		return 0;
+	}
+
+	@Override
+	public Object getItem(int row, int column) {
+		if (row <= getRowCount() && column <= getColumnCount()) {
+			return this.table[row][column];
+		} else {
+			return null;
+		}
 	}
 }
